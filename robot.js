@@ -31,7 +31,7 @@ const global = {
 
 }
 
-const { robotAIcityMap, print} = global
+const { robotAIcityMap, print } = global
 
 
 function graph (nodes) {
@@ -165,23 +165,20 @@ class RobotBrain {
     brain002(location, packages, pendingStops) {
         const queue = [{from:location,route:[], dist: 0}]
         destinationChecker(location, packages, pendingStops)
-        const visitTargets = new Set(pendingStops)
-        const visited = { [location]: true}
+        const visited = { [location]: true }
         for (; ;) {
             const {from, route, dist} = queue.shift()
-            if (visitTargets.has(from)) {
-                visitTargets.delete(from)
-                pendingStops.splice(0)
-                pendingStops.push(...visitTargets)
+            if (pendingStops.has(from)) {
+                pendingStops.delete(from)
                 return route
             }
             
-            const allNextStops = robotAIcityMap[from]
-            for (const stop in allNextStops) {
+            const stops = robotAIcityMap[from]
+            for (const stop in stops) {
                 if(!visited[stop]){
                     queue.push({
-                        from: stop,route: route.concat(stop),
-                        dist: dist + allNextStops[stop]
+                        from: stop, dist: dist + stops[stop],
+                        route: route.concat(stop)
                     })
                 
                 }
@@ -198,23 +195,23 @@ class RobotBrain {
         })
         
         destinationChecker(location, packages, pendingStops)
-        const visitTargets = new Set(pendingStops)
+        
         const visited = {[location] : true}
         for (; ;) {
             const {from,route, dist} = priorityQueue.remove()
-            if (visitTargets.has(from)) 
-                    diffRoutes.add({dist, route, from, pos: diffRoutes.length() + 1})
+            if (pendingStops.has(from)) 
+                    diffRoutes.add({dist, route, from})
             else {
-                const map = robotAIcityMap[from]
-                for (const stops in map) {
-                    if(!visited[stops] ) {
+                const stops = robotAIcityMap[from]
+                for (const stop in stops) {
+                    if(!visited[stop] ) {
                         
                         const peep = diffRoutes.show()
-                        const newDist = dist + map[stops]
+                        const newDist = dist + stops[stop]
                         if (!peep || newDist <= peep.dist)
                             priorityQueue.add({
-                                from: stops, dist: newDist,
-                                route: route.concat(stops)
+                                from: stop, dist: newDist,
+                                route: route.concat(stop)
                             })
                     }
                 }
@@ -224,9 +221,7 @@ class RobotBrain {
             
             if ( !priorityQueue.length() ) {
                 const {from, route} = diffRoutes.remove()
-                visitTargets.delete(from)
-                pendingStops.splice(0)
-                pendingStops.push(...visitTargets)
+                pendingStops.delete(from)
                 return route
             }  
           
@@ -258,26 +253,25 @@ class RobotBrawn {
 }
 
 function destinationChecker(AIspot, packages, pendingStops){
-    const set = new Set()
-    if (pendingStops.length) return
+    if (pendingStops.size) return
     else if (packages.some(p => AIspot != p.location)) { 
         packages.forEach(({location}) => {
-            AIspot !== location && set.add(location)
+            AIspot !== location && pendingStops.add(location)
         })
     }    
-    else packages.forEach(({address}) => set.add(address))
+    else packages.forEach(({address}) => (
+            pendingStops.add(address)))
 
-    pendingStops.push(...set)
 }
     
 
 function robotAI(brain, location, parcels) {
-    const pendingStops  = []
+    const pendingStops  = new Set()
     let route = brain(location, parcels, pendingStops)
     let robot = new RobotBrawn(location, parcels) 
     let [totalDistance, turns, len] = [0, 0, parcels.length]
     
-    while(parcels.length) {
+    while(true) {
         const destination = route.shift()
         const AI = robot.move(destination)
         
@@ -292,18 +286,18 @@ function robotAI(brain, location, parcels) {
             route = brain(location, parcels, pendingStops)
         
     }
-    
+
     
 }
 
 
 const {brain001, brain002, brain003} = new RobotBrain
 const currentLocation = "nuel"
-const packages = parcels(1)
+const packages = parcels(5)
 print(robotAIcityMap)
 print("\n")
 print (packages)
-//print(robotAI(brain001, currentLocation, packages))
+print(robotAI(brain001, currentLocation, packages))
 print("\n")
 print(robotAI(brain002, currentLocation, packages))
 print("\n")
