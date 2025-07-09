@@ -156,6 +156,18 @@ class MinHeap {
 
 
 class RobotBrain {
+    destinationChecker(AIspot, packages, pendingStops){
+    if (pendingStops.size) return
+    else if (packages.some(p => AIspot != p.location)) { 
+        packages.forEach(({location}) => {
+            AIspot !== location && pendingStops.add(location)
+        })
+    }    
+    else packages.forEach(({address}) => (
+            pendingStops.add(address)))
+
+}
+
 
     brain001(location) {
         const rand =arr=> arr[arr.length * Math.random() >>0]
@@ -163,8 +175,10 @@ class RobotBrain {
 }
 
     brain002(location, packages, pendingStops) {
+        
         const queue = [{from:location,route:[], dist: 0}]
-        destinationChecker(location, packages, pendingStops)
+        new RobotBrain()
+         .destinationChecker(location,packages, pendingStops)
         const visited = { [location]: true }
         for (; ;) {
             const {from, route, dist} = queue.shift()
@@ -191,10 +205,11 @@ class RobotBrain {
         const priorityQueue = new MinHeap()
         const diffRoutes = new MinHeap()
         priorityQueue.add({
-            from: location, route:[], dist: 0
+            from: location, route:[], dist: 0  
+            
         })
-        
-        destinationChecker(location, packages, pendingStops)
+        new RobotBrain()
+        .destinationChecker(location, packages, pendingStops)
         
         const visited = {[location] : true}
         for (; ;) {
@@ -252,17 +267,6 @@ class RobotBrawn {
     }
 }
 
-function destinationChecker(AIspot, packages, pendingStops){
-    if (pendingStops.size) return
-    else if (packages.some(p => AIspot != p.location)) { 
-        packages.forEach(({location}) => {
-            AIspot !== location && pendingStops.add(location)
-        })
-    }    
-    else packages.forEach(({address}) => (
-            pendingStops.add(address)))
-
-}
     
 
 function robotAI(brain, location, parcels) {
