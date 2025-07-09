@@ -11,10 +11,11 @@ function parcels (num) {
     const random = num => Math.floor(num * Math.random())
     const sites = Object.keys(robotAIcityMap)
     for (num; num >= 1; num--) {
-        let location = sites[random(sites.length)]
+        const location = sites[random(sites.length)]
         let address = sites[random(sites.length)]
-        while (location == address) address = sites[random(sites.length)]
-            packages.push({location, address})
+        while (location == address) 
+            address = sites[random(sites.length)]
+        packages.push({location, address})
     }
     return packages
 }
@@ -57,34 +58,20 @@ function robotAI(brain, location, parcels) {
 
 
 const {brain001, brain002, brain003} = new RobotBrain
+const random = num => num * Math.random() >> 0
 const currentLocation = "nuel"
-const packages = parcels(5)
-print(robotAIcityMap)
+const packages = parcels(random(200))
+
+
+print(robotAIcityMap) // THE CITY IN WHICH THE ROBOT MOVES IN
 print("\n")
-print (packages)
-print(robotAI(brain001, currentLocation, packages))
+print (packages) // THE PARCELS THE ROBOT CARRIES
+
+print(robotAI(brain001, currentLocation, packages)) // RB001
 print("\n")
-print(robotAI(brain002, currentLocation, packages))
+print(robotAI(brain002, currentLocation, packages)) // RB002
 print("\n")
-print(robotAI(brain003, currentLocation, packages))
+print(robotAI(brain003, currentLocation, packages)) // RB003
 
 
 
-
-
-
-let parNum = 1
-let num = 10
-const checker = (br2, br3, num) => {
-    const total = num
-    const status = {wins: 0, loss: 0, draws: 0, parNum}
-    for (num; num > 0; num--) {
-        const packages = parcels(parNum)
-       const r2 = robotAI(br2, currentLocation, packages)
-       const r3 = robotAI(br3, currentLocation, packages)
-       if (r3 < r2) status.wins++
-       else if (r3 > r2) {status.loss++; print(packages)}
-       else status.draws++
-    }
-    return status
-}

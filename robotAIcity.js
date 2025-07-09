@@ -1,9 +1,14 @@
 const residentStreet = [
-    "nuel-honour-1", "nuel-odu-3", "nuel-xando-4", "nuel-tommy-1", "honour-odu-2", "honour-tommy-3","honour-xando-3","odu-xando-1", "odu-yusuf-9", "xando-tommy-2","xando-judah-2", "judah-yusuf-7", "tommy-yusuf-4"
+    "nuel-honour-1", "nuel-odu-3", "nuel-xando-4", 
+    "nuel-tommy-1", "honour-odu-2", "honour-tommy-3",
+    "honour-xando-3","odu-xando-1", "odu-yusuf-9", 
+    "xando-tommy-2","xando-judah-2", "judah-yusuf-7", 
+    "tommy-yusuf-4"
 ]
 
 const letterStreet = [
-    "A-B-5","A-C-3","A-D-4","B-C-6","B-G-1","B-E-3","C-E-1","C-F-9","C-G-4","E-D-4","E-F-2","F-D-6"
+    "A-B-5","A-C-3","A-D-4","B-C-6","B-G-1","B-E-3",
+    "C-E-1","C-F-9","C-G-4","E-D-4","E-F-2","F-D-6"
     
 ]
 

@@ -23,7 +23,7 @@ class RobotBrain {
 
     brain002(location, packages, pendingStops) {
         
-        const queue = [{from:location,route:[], dist: 0}]
+        const queue = [{ from: location, route: [], dist: 0 }]
         new RobotBrain()
          .destinationChecker(location,packages, pendingStops)
         const visited = { [location]: true }
