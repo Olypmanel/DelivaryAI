@@ -17,8 +17,14 @@ class RobotBrain {
 
 
     brain001(location) {
-        const rand =arr=> arr[arr.length * Math.random() >>0]
-        return [rand(Object.keys(robotAIcityMap[location]))]
+        const random = arr => arr[arr.length * Math.random() >>0]
+        const step = random(Object.keys(robotAIcityMap[location]))
+        return {
+            dist: robotAIcityMap[location][step],
+            route: [step]
+            
+        }
+        
 }
 
     brain002(location, packages, pendingStops) {
@@ -31,7 +37,7 @@ class RobotBrain {
             const {from, route, dist} = queue.shift()
             if (pendingStops.has(from)) {
                 pendingStops.delete(from)
-                return route
+                return { dist, route}
             }
             
             const stops = robotAIcityMap[from]
@@ -82,9 +88,9 @@ class RobotBrain {
             }
             
             if ( !priorityQueue.length() ) {
-                const {from, route} = diffRoutes.remove()
+                const {from, route, dist} = diffRoutes.remove()
                 pendingStops.delete(from)
-                return route
+                return {dist, route}
             }  
           
         }

@@ -8,13 +8,14 @@ const print = console.log
 
 function parcels (num) {
     const packages = []
-    const random = num => Math.floor(num * Math.random())
+    const random = num => num * Math.random() >> 0
     const sites = Object.keys(robotAIcityMap)
+    const siteLength = sites.length
     for (num; num >= 1; num--) {
-        const location = sites[random(sites.length)]
-        let address = sites[random(sites.length)]
+        const location = sites[random(siteLength)]
+        let address = sites[random(siteLength)]
         while (location == address) 
-            address = sites[random(sites.length)]
+            address = sites[random(siteLength)]
         packages.push({location, address})
     }
     return packages
@@ -33,24 +34,25 @@ function parcels (num) {
 
 function robotAI(brain, location, parcels) {
     const pendingStops  = new Set()
-    let route = brain(location, parcels, pendingStops)
+    let route = null
     let robot = new RobotBrawn(location, parcels) 
     let [totalDistance, turns, len] = [0, 0, parcels.length]
     
     while(true) {
+        if (!parcels.length) return `Moved ${len} parcels in ${turns} turns through ${totalDistance} Km`    
+        
+        if (!route || !route.length) {
+            const {dist, route: path} = brain(location, parcels, pendingStops)
+            totalDistance += dist
+            turns += path.length
+            route = path
+        }
         const destination = route.shift()
-        const AI = robot.move(destination)
+        robot = robot.move(destination)
         
         print(`move from ${location} to ${destination}`)
-        totalDistance +=robotAIcityMap[location][destination]
-        turns++; 
         location = destination;  
-        parcels = AI.parcels;
-        robot = AI
-        if (!parcels.length) return `Moved ${len} parcels in ${turns} turns through ${totalDistance} Km`    
-        if (!route.length) 
-            route = brain(location, parcels, pendingStops)
-        
+        parcels = robot.parcels;
     }
 
     
@@ -60,7 +62,7 @@ function robotAI(brain, location, parcels) {
 const {brain001, brain002, brain003} = new RobotBrain
 const random = num => num * Math.random() >> 0
 const currentLocation = "nuel"
-const packages = parcels(random(200))
+const packages = parcels(1)
 
 
 print(robotAIcityMap) // THE CITY IN WHICH THE ROBOT MOVES IN
