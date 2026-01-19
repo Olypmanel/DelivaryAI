@@ -3,11 +3,12 @@ import robotAIcityMap from "./robotAIcity.js"
 class RobotBrain {
     
     
-    destinationChecker(AIspot, packages, pendingStops){
+    destinationChecker(AIspot, packages,pendingStops) {
     if (pendingStops.size) return
     else if (packages.some(p => AIspot != p.location)) { 
-        packages.forEach(({location}) => {
-            AIspot !== location && pendingStops.add(location)
+        packages.forEach(({location, address}) => {
+            if (AIspot !== location)
+                pendingStops.add(location)
         })
     }    
     else packages.forEach(({address}) => (
@@ -26,6 +27,7 @@ class RobotBrain {
         }
         
 }
+    
 
     brain002(location, packages, pendingStops) {
         
@@ -34,7 +36,7 @@ class RobotBrain {
          .destinationChecker(location,packages, pendingStops)
         const visited = { [location]: true }
         for (; ;) {
-            const {from, route, dist} = queue.shift()
+            const {from,route,dist} = queue.shift()
             if (pendingStops.has(from)) {
                 pendingStops.delete(from)
                 return { dist, route}
@@ -54,7 +56,7 @@ class RobotBrain {
         visited[from] = true
     }
     
-    brain003 (location, packages, pendingStops) {
+    brain003 (location, packages, pendingStops, check ) {
         const priorityQueue = new MinHeap()
         const diffRoutes = new MinHeap()
         priorityQueue.add({
@@ -74,11 +76,12 @@ class RobotBrain {
                 for (const stop in stops) {
                     if(!visited[stop] ) {
                         
-                        const peep = diffRoutes.show()
-                        const newDist = dist + stops[stop]
-                        if (!peep || newDist <= peep.dist)
+                        const peep= diffRoutes.show()
+                        const nDist = dist + stops[stop]
+                        if(!peep||nDist<=peep.dist)
                             priorityQueue.add({
-                                from: stop, dist: newDist,
+                                from: stop, 
+                                dist: nDist,
                                 route: route.concat(stop)
                             })
                     }

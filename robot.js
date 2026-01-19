@@ -32,37 +32,35 @@ function parcels (num) {
 
     
 
-function robotAI(brain, location, parcels) {
+function robotAI(brain,location,parcels,pr=true) {
     const pendingStops  = new Set()
     let route = null
     let robot = new RobotBrawn(location, parcels) 
-    let [totalDistance, turns, len] = [0, 0, parcels.length]
+    let [totalDist,turns,pLen]= [0,0,parcels.length]
     
-    while(true) {
-        if (!parcels.length) return `Moved ${len} parcels in ${turns} turns through ${totalDistance} Km`    
-        
+    while(parcels.length) {
         if (!route || !route.length) {
             const {dist, route: path} = brain(location, parcels, pendingStops)
-            totalDistance += dist
+            totalDist += dist
             turns += path.length
             route = path
         }
         const destination = route.shift()
         robot = robot.move(destination)
         
-        print(`move from ${location} to ${destination}`)
+        pr && print(`move from ${location} to ${destination}`)
         location = destination;  
         parcels = robot.parcels;
     }
-
-    
+    pr && print(`Moved ${pLen} parcels in ${turns} turns through ${totalDist} Km`)   
+    return {turns, totalDist}
 }
 
 
-const {brain001, brain002, brain003} = new RobotBrain
+const { brain001, brain002, brain003 } = new RobotBrain
 const random = num => num * Math.random() >> 0
 const currentLocation = "nuel"
-const packages = parcels(1)
+const packages = parcels(10)
 
 
 print(robotAIcityMap) // THE CITY IN WHICH THE ROBOT MOVES IN
@@ -74,6 +72,4 @@ print("\n")
 print(robotAI(brain002, currentLocation, packages)) // RB002
 print("\n")
 print(robotAI(brain003, currentLocation, packages)) // RB003
-
-
 
