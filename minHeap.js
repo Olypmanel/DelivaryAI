@@ -12,7 +12,7 @@ class MinHeap {
         const right = this.getRightChild(index)
         
         if (right <= this.lastIndex()) { //two children
-            // if there right child, there will left child
+            // if there is a right child, there will be a left child definately
             const {dist:rightKey, route:r} = this.heap[right]
             const {dist: leftKey, route: l} = this.heap[left]
             if (rightKey === leftKey) // 
@@ -42,7 +42,7 @@ class MinHeap {
             const {dist: pKey, route: pRoute} = parent
             
             if (cKey < pKey || 
-                (cKey === pKey && len(cRoute) < len(pRoute)))
+                (cKey === pKey && len(cRoute) > len(pRoute)))
                     this.swap(index, parentIndex)
             else break
             index = parentIndex
@@ -72,7 +72,7 @@ class MinHeap {
             const {dist: pKey, route: pRoute} = parent
             
             if(cKey < pKey || 
-                (cKey === pKey && len(cRoute) < len(pRoute)))
+                (cKey === pKey && len(cRoute) > len(pRoute)))
                     this.swap(index, lessChildInd)    
             else return smallest
             

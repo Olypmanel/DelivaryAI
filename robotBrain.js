@@ -6,7 +6,7 @@ class RobotBrain {
     destinationChecker(AIspot, packages,pendingStops) {
     if (pendingStops.size) return
     else if (packages.some(p => AIspot != p.location)) { 
-        packages.forEach(({location, address}) => {
+        packages.forEach(({location}) => {
             if (AIspot !== location)
                 pendingStops.add(location)
         })
@@ -78,7 +78,7 @@ class RobotBrain {
                         
                         const peep= diffRoutes.show()
                         const nDist = dist + stops[stop]
-                        if(!peep||nDist<=peep.dist)
+                        //if(!peep||nDist<=peep.dist)
                             priorityQueue.add({
                                 from: stop, 
                                 dist: nDist,
