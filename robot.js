@@ -65,14 +65,14 @@ function robotAI(brain,location,parcels,pr=true) {
     }
     pr && print(`Moved ${pLen} parcels in ${turns} turns through ${totalDist} Km`)
     
-    return {turns, totalDist}
+    return {totalParcel: pLen, turns, totalDist}
 }
 
 
 const { brain001, brain002, brain003 } = new RobotBrain
 const random = num => num * Math.random() >> 0
 const currentLocation = "nuel"
-const packages = parcels(random(50))
+const packages = parcels(random(20))
 
 
 print(robotAIcityMap) // THE CITY IN WHICH THE ROBOT MOVES IN
