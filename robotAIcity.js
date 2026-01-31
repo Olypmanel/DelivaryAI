@@ -29,11 +29,12 @@ const RobotAIcity = [
 
 
 
-
+export const capitalize = str => !str ? str : str[0].toUpperCase() + str.slice(1).toLowerCase()
 
 const graph = nodes => {
     const map = {}
     const connectNode = (A, B, distance) => {
+        A = capitalize(A); B = capitalize(B)
         if (!map[A]) map[A] = { [B]: parseFloat(distance) }
         else map[A] = {...map[A], [B]: parseFloat(distance) }
     }

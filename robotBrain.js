@@ -18,7 +18,9 @@ class RobotBrain {
 
 
     brain001(location) {
-        const random = arr => arr[arr.length * Math.random() >>0]
+        const random = arr => arr[
+           parseInt(arr.length * Math.random())
+            ]
         const step = random(Object.keys(robotAIcityMap[location]))
         return {
             dist: robotAIcityMap[location][step],

@@ -1,6 +1,6 @@
 import RobotBrain from "./RobotBrain.js"
 import RobotBrawn from "./RobotBrawn.js"
-import robotAIcityMap from "./robotAIcity.js"
+import robotAIcityMap, { capitalize } from "./robotAIcity.js"
 
 
 const print = console.log
@@ -8,7 +8,7 @@ const print = console.log
 
 function parcels (num) {
     const packages = []
-    const random = num => num * Math.random() >> 0
+    const random =num=> parseInt(num*Math.random())
     const sites = Object.keys(robotAIcityMap)
     const siteLength = sites.length
     for (num; num >= 1; num--) {
@@ -17,7 +17,9 @@ function parcels (num) {
         while (location == address) 
             address = sites[random(siteLength)]
         packages.push({
-            location, address, sender: location})
+            location, address, 
+            sender: location, picked: false
+        })
     }
     return packages
 }
@@ -34,7 +36,12 @@ const printDeliveredParcel = arr => {
     arr.length && print('\n')
 }
 
-
+const printPicked = (picked, message = "🔝") => {
+    if (!picked) return ""
+    if (picked == 1) return message
+    else return `${message}${picked}`
+    
+}
 
 
 
@@ -45,9 +52,10 @@ const printDeliveredParcel = arr => {
 function robotAI(brain,location,parcels,pr=true) {
     const pendingStops  = new Set()
     let route = null
-    let robot = new RobotBrawn(location, parcels, []) 
+    location = capitalize(location)
+    let robot = new RobotBrawn(location, parcels)
     let [totalDist,turns,pLen]= [0,0,parcels.length]
-    
+    pr && print(`Robot is at ${location}`)
     while(parcels.length) {
         if (!route || !route.length) {
             const {dist, route: path} = brain(location, parcels, pendingStops)
@@ -57,9 +65,9 @@ function robotAI(brain,location,parcels,pr=true) {
         }
         const destination = route.shift()
         robot = robot.move(destination)
-        //print(robot.delivered)
-        pr && print(`move from ${location} to ${destination}`)
-        pr && printDeliveredParcel(robot.delivered)
+        const {delivered, picked} = robot.status
+        pr && print(`move from ${location}${printPicked(picked)} to ${destination}`)
+        pr && printDeliveredParcel(delivered)
         location = destination;  
         parcels = robot.parcels;
     }
@@ -70,7 +78,7 @@ function robotAI(brain,location,parcels,pr=true) {
 
 
 const { brain001, brain002, brain003 } = new RobotBrain
-const random = num => num * Math.random() >> 0
+const random = num => parseInt(num * Math.random())
 const currentLocation = "nuel"
 const packages = parcels(random(20))
 
@@ -79,7 +87,7 @@ print(robotAIcityMap) // THE CITY IN WHICH THE ROBOT MOVES IN
 print("\n")
 print (packages) // THE PARCELS THE ROBOT CARRIES
 
-print(robotAI(brain001, currentLocation, packages)) // RB001
+//print(robotAI(brain001, currentLocation, packages)) // RB001
 print("\n")
 print(robotAI(brain002, currentLocation, packages)) // RB002
 print("\n")
