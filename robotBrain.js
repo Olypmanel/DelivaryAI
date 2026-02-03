@@ -19,11 +19,11 @@ class RobotBrain {
 
     brain001(location) {
         const random = arr => arr[
-           parseInt(arr.length * Math.random())
-            ]
-        const step = random(Object.keys(robotAIcityMap[location]))
+           parseInt(arr.length * Math.random())]
+        const possSteps = robotAIcityMap[location]
+        const step = random(Object.keys(possStep))
         return {
-            dist: robotAIcityMap[location][step],
+            dist: possSteps[step],
             route: [step]
             
         }
@@ -48,7 +48,8 @@ class RobotBrain {
             for (const stop in stops) {
                 if(!visited[stop]){
                     queue.push({
-                        from: stop, dist: dist + stops[stop],
+                        from: stop, 
+                        dist: dist + stops[stop],
                         route: route.concat(stop)
                     })
                 
@@ -58,7 +59,7 @@ class RobotBrain {
         visited[from] = true
     }
     
-    brain003 (location, packages, pendingStops, check ) {
+    brain003 (location, packages, pendingStops) {
         const priorityQueue = new MinHeap()
         const diffRoutes = new MinHeap()
         priorityQueue.add({
@@ -80,7 +81,7 @@ class RobotBrain {
                         
                         const peep= diffRoutes.show()
                         const nDist = dist + stops[stop]
-                        //if(!peep||nDist<=peep.dist)
+                        if(!peep||nDist<=peep.dist)
                             priorityQueue.add({
                                 from: stop, 
                                 dist: nDist,

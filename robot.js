@@ -26,9 +26,7 @@ function parcels (num) {
 
 
 const printDeliveredParcel = arr => {
-    //arr.length && print('\n')
     for (const a of arr) {
-    
         const [sender, address] = a.split`==>`
         print (
             `Parcel sent by ${sender} is received by ${address}`)
