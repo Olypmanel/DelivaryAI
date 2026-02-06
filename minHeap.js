@@ -3,8 +3,9 @@ class MinHeap {
         this.heap = [],
         this.lastIndex = () => this.heap.length - 1,
         this.getLeftChild = index => 2 * index + 1,
-        this.getRightChild = index =>  2 * index + 2,
-        this.getParent = index => ((index + 1) / 2 >> 0 ) - 1
+        this.getRightChild = index => 2 * index + 2,
+        this.getParent = index => 
+            parseInt((index + 1) / 2) - 1
         
     }
     getLesserChilds(index) {
@@ -16,7 +17,7 @@ class MinHeap {
             const {dist:rightKey, route:r} = this.heap[right]
             const {dist: leftKey, route: l} = this.heap[left]
             if (rightKey === leftKey) // 
-                return r.length < l.length ? right : left
+                return r.length > l.length ? right : left
             return rightKey < leftKey ? right : left
         }
         else if (left === this.lastIndex()) return left 

@@ -17,11 +17,11 @@ class RobotBrain {
 }
 
 
-    brain001(location) {
+    brain001(location) { //RANDOMNESS
         const random = arr => arr[
            parseInt(arr.length * Math.random())]
         const possSteps = robotAIcityMap[location]
-        const step = random(Object.keys(possStep))
+        const step = random(Object.keys(possSteps))
         return {
             dist: possSteps[step],
             route: [step]
@@ -32,7 +32,7 @@ class RobotBrain {
     
 
     brain002(location, packages, pendingStops) {
-        
+        // BFS ALGORITHM
         const queue = [{ from: location, route: [], dist: 0 }]
         new RobotBrain()
          .destinationChecker(location,packages, pendingStops)
@@ -60,14 +60,15 @@ class RobotBrain {
     }
     
     brain003 (location, packages, pendingStops) {
+        // DIJKSTRA ALGORITHM
         const priorityQueue = new MinHeap()
         const diffRoutes = new MinHeap()
         priorityQueue.add({
             from: location, route:[], dist: 0  
             
         })
-        new RobotBrain()
-        .destinationChecker(location, packages, pendingStops)
+        new RobotBrain().destinationChecker (
+            location, packages, pendingStops)
         
         const visited = {[location] : true}
         for (; ;) {
@@ -98,11 +99,7 @@ class RobotBrain {
                 pendingStops.delete(from)
                 return {dist, route}
             }  
-          
         }
-        
     }
-    
- 
 }
 export default RobotBrain

@@ -51,9 +51,10 @@ function robotAI(brain,location,parcels,pr=true) {
     const pendingStops  = new Set()
     let route = null
     location = capitalize(location)
+    const name = capitalize(brain.name)
     let robot = new RobotBrawn(location, parcels)
     let [totalDist,turns,pLen]= [0,0,parcels.length]
-    pr && print(`Robot is at ${location}`)
+    pr && print(`${name} is at ${location}`)
     while(parcels.length) {
         if (!route || !route.length) {
             const {dist, route: path} = brain(location, parcels, pendingStops)
@@ -69,15 +70,17 @@ function robotAI(brain,location,parcels,pr=true) {
         location = destination;  
         parcels = robot.parcels;
     }
-    pr && print(`Moved ${pLen} parcels in ${turns} turns through ${totalDist} Km`)
+    pr && print(`${name} moved ${pLen} parcels in ${turns} turns through ${totalDist} Km`)
     
-    return {totalParcel: pLen, turns, totalDist}
+    return { 
+        robot: name, parcel: pLen, turns, totalDist
+    }
 }
 
 
 const { brain001, brain002, brain003 } = new RobotBrain
 const random = num => parseInt(num * Math.random())
-const currentLocation = "nuel"
+const location = "robot_station"
 const packages = parcels(random(20))
 
 
@@ -85,8 +88,27 @@ print(robotAIcityMap) // THE CITY IN WHICH THE ROBOT MOVES IN
 print("\n")
 print (packages) // THE PARCELS THE ROBOT CARRIES
 
-//print(robotAI(brain001, currentLocation, packages)) // RB001
+const b1 = robotAI(brain001, location,packages, 0) // RB001
 print("\n")
-print(robotAI(brain002, currentLocation, packages)) // RB002
+const b2 = robotAI(brain002, location, packages) // RB002
 print("\n")
-print(robotAI(brain003, currentLocation, packages)) // RB003
+const b3 = robotAI(brain003, location, packages) // RB003
+print("\n", b1, "\n",b2,"\n", b3)
+
+
+const runStats = (round, key = 'totalDist') => {
+    const board = {key, br02: 0, br03: 0, draw: 0 }
+    for(round; round > 0; round--) {
+        const maxPack = Math.max(10, random(100))
+        const packages = parcels(maxPack)
+        const br02 = robotAI(brain002,location, packages, false)
+        const br03 = robotAI(brain003, location, packages, false)
+        if (br03[key] < br02[key]) 
+            board.br03 += 1
+        else if (br03[key] > br02[key])
+            board.br02 += 1
+        else board.draw += 1
+    }
+    return board
+}
+print(runStats(100, "totalDist"))
